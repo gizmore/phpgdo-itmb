@@ -1,2 +1,5 @@
 # phpgdo-itmb
-private company repository
+
+Backup and Website for ITMB.
+
+
