@@ -8,6 +8,7 @@ use GDO\Avatar\Module_Avatar;
 use GDO\Core\GDO_Exception;
 use GDO\Crypto\BCrypt;
 use GDO\File\GDO_File;
+use GDO\Favicon\Module_Favicon;
 use GDO\Language\Module_Language;
 use GDO\User\GDO_User;
 use GDO\User\GDT_UserType;
@@ -22,6 +23,7 @@ class Install
     {
         self::installGizmore();
         self::installConfiguration();
+        self::installFavicon();
      }
 
     /**
@@ -57,6 +59,22 @@ class Install
     {
         Module_Avatar::instance()->saveConfigVar('hook_sidebar', '0');
         Module_Language::instance()->saveConfigVar('languages', '["en","de"]');
+    }
+
+    /** Seed the favicon once without replacing an existing site choice. */
+    private static function installFavicon(): void
+    {
+        $favicon = Module_Favicon::instance();
+        if ($favicon->cfgFavicon())
+        {
+            return;
+        }
+        $file = GDO_File::getByName('itmb_idea2repi.png') ?? GDO_File::fromPath(
+            'itmb_idea2repi.png',
+            Module_ITMB::instance()->filePath('img/idea2repi.png'),
+        )->insert();
+        $favicon->saveConfigVar('favicon', $file->getID());
+        $favicon->updateFavicon();
     }
 
 }

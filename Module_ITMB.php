@@ -4,6 +4,7 @@ namespace GDO\ITMB;
 use GDO\Core\GDO_Module;
 use GDO\Core\Method;
 use GDO\Core\Website;
+use GDO\Favicon\Module_Favicon;
 use GDO\UI\GDT_Headline;
 use GDO\UI\GDT_Link;
 use GDO\UI\GDT_Page;
@@ -53,6 +54,7 @@ final class Module_ITMB extends GDO_Module
 			'Avatar',
 			'Bootstrap5Theme',
 			'Contact',
+			'Favicon',
 			'FontAtkinson',
             'Lounge',
 			'Markdown',
@@ -76,27 +78,14 @@ final class Module_ITMB extends GDO_Module
         GDT_Page::instance()->leftBar()->addField(GDT_Link::make('link_cv')->href($this->href('CV')));
 	}
 
-    /**
-     * <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-     * <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-     * <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-     * <link rel="manifest" href="/site.webmanifest">
-     * <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-     * <meta name="msapplication-TileColor" content="#da532c">
-     * <meta name="theme-color" content="#ffffff">
-     */
 	public function onIncludeScripts(): void
 	{
         $this->addCSS('css/gdo7-itmb.css');
-        # Add favicons
-        $dir = $this->wwwPath('img/favicons/');
-        Website::addLink(['rel'=>'apple-touch-icon', 'sizes'=>'180x180', 'href'=>"{$dir}apple-touch-icon.png"]);
-        Website::addLink(['rel'=>'icon', 'sizes'=>'32x32', 'type'=>'image/png', 'href'=>"{$dir}favicon-32x32.png"]);
-        Website::addLink(['rel'=>'icon', 'sizes'=>'16x16', 'type'=>'image/png', 'href'=>"{$dir}favicon-16x16.png"]);
-        Website::addLink(['rel'=>'manifest', 'href'=>"{$dir}site.webmanifest"]);
-        Website::addLink(['rel'=>'mask-icon', 'href'=>"{$dir}safari-pinned-tab.svg", 'color'=>'#5bbad5']);
-        Website::addMeta(['msapplication-TileColor', '#da532c', 'name']);
-        Website::addMeta(['theme-color', '#ffffff', 'name']);
+        // Existing installations may not have run the favicon seed yet.
+        if (!Module_Favicon::instance()->cfgFavicon())
+        {
+            Website::addLink(['rel'=>'icon', 'type'=>'image/png', 'href'=>$this->wwwPath('img/idea2repi.png')]);
+        }
 	}
 
     public function hookBeforeExecute()
@@ -104,7 +93,7 @@ final class Module_ITMB extends GDO_Module
         global $me;
         if (!$me->seoMetaImage())
         {
-            Website::addMeta(['og:image', $this->wwwURL('img/logo2021.jpg'), 'property']);
+            Website::addMeta(['og:image', $this->wwwURL('img/idea2repi.png'), 'property']);
         }
     }
 

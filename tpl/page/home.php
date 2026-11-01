@@ -19,7 +19,7 @@ $linkPrice = GDT_Link::make()->href(href('ITMB', 'Pricing'))->text('link_pricing
 
 <?=GDT_Box::make()->addText('itmb_about_info', [$linkCV, $linkPrice])->render()?>
 
-    <?=GDT_Image::make()->src($m->wwwPath('img/logo2021.jpg'))->addClass('itmb-home-logo')->css('width', '320px')->render()?>
+    <?=GDT_Image::make()->src($m->wwwPath('img/idea2repi.png'))->addClass('itmb-home-logo')->render()?>
 
 
 	<?php
